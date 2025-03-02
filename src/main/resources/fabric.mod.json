@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "pasture-loot",
+  "version": "${version}",
+  "name": "PastureLoot",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/pasture-loot/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.dremixam.pastureLoot.client.PastureLootClient"
+    ],
+    "main": [
+      "com.dremixam.pastureLoot.PastureLoot"
+    ]
+  },
+  "mixins": [
+    "pasture-loot.mixins.json",
+    {
+      "config": "pasture-loot.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "cobblemon": ">=${cobblemon_version}"
+  }
+}
