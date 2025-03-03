@@ -27,7 +27,7 @@ public class Config {
 
     public static class Defaults {
         public static final int DROP_CHECK_TICKS = 1200;
-        public static final float DROP_CHANCE = 0.05f;
+        public static final float DROP_CHANCE = 0.02f;
         public static final String[] ITEM_BLACKLIST = new String[]{
                 "minecraft:porkchop",
                 "minecraft:beef",
@@ -51,7 +51,9 @@ public class Config {
                 "minecraft:pufferfish",
                 "minecraft:bone_block",
                 "minecraft:bone_meal",
-                "cobblemon:sharp_beak"
+                "cobblemon:sharp_beak",
+                "minecraft:honey_bottle",
+                "minecraft:salmon"
         };
     }
 
