@@ -40,6 +40,7 @@ repositories {
 
 dependencies {
     // To change the versions see the gradle.properties file
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.0"
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -47,6 +48,9 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "com.cobblemon:fabric:${project.cobblemon_version}"
+
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j-impl:2.14.1'
 }
 
 processResources {

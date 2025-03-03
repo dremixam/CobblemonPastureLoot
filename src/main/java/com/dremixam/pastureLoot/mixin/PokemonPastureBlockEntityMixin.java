@@ -1,68 +1,93 @@
 package com.dremixam.pastureLoot.mixin;
 
+import com.cobblemon.mod.common.api.drop.DropEntry;
 import com.cobblemon.mod.common.api.drop.DropTable;
+import com.cobblemon.mod.common.api.drop.ItemDropEntry;
+import com.cobblemon.mod.common.api.events.drops.LootDroppedEvent;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.pokemon.Species;
+import com.dremixam.pastureLoot.Config;
 import com.dremixam.pastureLoot.PastureLoot;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.BlockPos;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
+import static com.cobblemon.mod.common.api.events.CobblemonEvents.LOOT_DROPPED;
+
 @Mixin(PokemonPastureBlockEntity.class)
-public class PokemonPastureBlockEntityMixin {
+public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer {
 
-    private static final Map<String, JsonArray> lootTable = new HashMap<>();
+    @Unique
+    private static final Logger LOGGER = PastureLoot.LOGGER;
 
-    static {
-        try {
-            InputStreamReader reader = new InputStreamReader(Objects.requireNonNull(PastureLoot.class.getResourceAsStream("/loot_tables.json")));
-
-            JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
-            JsonArray entries = jsonObject.getAsJsonArray("entries");
-            for (int i = 0; i < entries.size(); i++) {
-                JsonObject entry = entries.get(i).getAsJsonObject();
-                String id = entry.get("id").getAsString();
-                JsonArray drops = entry.getAsJsonArray("drops");
-                lootTable.put(id, drops);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Unique
+    private static Config getConfig() {
+        return PastureLoot.INSTANCE.getConfig();
     }
 
     @Inject(at = @At("HEAD"), method = "TICKER$lambda$14")
-    private static void init(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity, CallbackInfo ci) {
+    private static void tick(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity, CallbackInfo ci) {
         if (world.isClientSide) return;
 
-        // De ce que je comprends ici on est dans un random tick sur le blockentity d'un pasture et on a acces a la liste des pokémon tethered
+        // Executé à chaque tick d'un pasture block entity
 
         blockEntity.getTetheredPokemon().forEach(tethering -> {
-            Pokemon pokemon = tethering.getPokemon();
+            double randomNumber = Math.random();
 
-            if (pokemon != null && !pokemon.isFainted()) {
-                double randomNumber = Math.random();
+            if (randomNumber < getConfig().getDropChance() / getConfig().getDropCheckTicks()) {
 
-                DropTable drops = pokemon.getSpecies().getDrops();
+                Pokemon pokemon = tethering.getPokemon();
 
+                if (pokemon != null && !pokemon.isFainted()) {
 
+                    try {
+                        Species species = pokemon.getSpecies();
+                        DropTable dropTable = species.getDrops();
+                        List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
+                        ServerLevel serverWorld = (ServerLevel) world;
 
+                        // take one random element drop in drops List
+                        if (drops.isEmpty()) return;
 
+                        DropEntry drop = drops.get(serverWorld.random.nextInt(drops.size()));
+
+                        if (drop instanceof ItemDropEntry itemDropEntry) {
+
+                            Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
+
+                            if (!Arrays.asList(getConfig().getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
+                                if (item != null) {
+                                    ItemStack stack = new ItemStack(item, 1);
+
+                                    world.addFreshEntity(new ItemEntity(world, Objects.requireNonNull(pokemon.getEntity()).getX(), pokemon.getEntity().getY(), pokemon.getEntity().getZ(), stack));
+
+                                    LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("Error while dropping loot", e);
+                    }
+
+                }
             }
-
         });
 
 
