@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.drop.DropTable;
 import com.cobblemon.mod.common.api.drop.ItemDropEntry;
 import com.cobblemon.mod.common.api.events.drops.LootDroppedEvent;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.pokemon.Species;
 import com.dremixam.pastureLoot.Config;
@@ -57,6 +58,11 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
 
                 if (pokemon != null && !pokemon.isFainted()) {
 
+                    PokemonEntity entity = pokemon.getEntity();
+
+                    // If pokemon is not currently loaded, we can't drop loot
+                    if (entity == null) return;
+
                     try {
                         Species species = pokemon.getSpecies();
                         DropTable dropTable = species.getDrops();
@@ -76,7 +82,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                                 if (item != null) {
                                     ItemStack stack = new ItemStack(item, 1);
 
-                                    world.addFreshEntity(new ItemEntity(world, Objects.requireNonNull(pokemon.getEntity()).getX(), pokemon.getEntity().getY(), pokemon.getEntity().getZ(), stack));
+                                    world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
 
                                     LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
                                 }
