@@ -1,6 +1,5 @@
 package com.dremixam.pastureLoot;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -9,7 +8,6 @@ import com.google.gson.JsonParser;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 public class Config {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -53,7 +51,8 @@ public class Config {
                 "minecraft:bone_meal",
                 "cobblemon:sharp_beak",
                 "minecraft:honey_bottle",
-                "minecraft:salmon"
+                "minecraft:salmon",
+                "minecraft:white_wool"
         };
     }
 
@@ -69,14 +68,13 @@ public class Config {
         return itemBlacklist;
     }
 
-
     public static Config load() {
         Config config = new Config();
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
-            config.dropCheckTicks = json.get("dropCheckTicks").getAsInt();
-            config.dropChance = json.get("dropChance").getAsFloat();
-            config.itemBlacklist = GSON.fromJson(json.get("itemBlacklist"), String[].class);
+            config.dropCheckTicks = json.get("tick_per_minute").getAsInt();
+            config.dropChance = json.get("drop_chance_per_minute").getAsFloat();
+            config.itemBlacklist = GSON.fromJson(json.get("item_blacklist"), String[].class);
         } catch (IOException e) {
             config = new Config();
             config.save();

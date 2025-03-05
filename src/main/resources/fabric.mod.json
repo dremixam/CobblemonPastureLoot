@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "PastureLoot",
   "description": "",
-  "authors": [],
+  "authors": ["DrEmixam"],
   "contact": {},
   "license": "All-Rights-Reserved",
   "icon": "assets/pasture-loot/icon.png",

@@ -3,7 +3,6 @@ package com.dremixam.pastureLoot.mixin;
 import com.cobblemon.mod.common.api.drop.DropEntry;
 import com.cobblemon.mod.common.api.drop.DropTable;
 import com.cobblemon.mod.common.api.drop.ItemDropEntry;
-import com.cobblemon.mod.common.api.events.drops.LootDroppedEvent;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
@@ -28,9 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-
-import static com.cobblemon.mod.common.api.events.CobblemonEvents.LOOT_DROPPED;
 
 @Mixin(PokemonPastureBlockEntity.class)
 public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer {
@@ -47,7 +43,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
     private static void tick(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity, CallbackInfo ci) {
         if (world.isClientSide) return;
 
-        // Executé à chaque tick d'un pasture block entity
+        // Executed on each tick of the block entity
 
         blockEntity.getTetheredPokemon().forEach(tethering -> {
             double randomNumber = Math.random();
