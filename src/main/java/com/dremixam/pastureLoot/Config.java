@@ -84,9 +84,9 @@ public class Config {
 
     private void save() {
         JsonObject json = new JsonObject();
-        json.addProperty("dropCheckTicks", dropCheckTicks);
-        json.addProperty("dropChance", dropChance);
-        json.add("itemBlacklist", GSON.toJsonTree(itemBlacklist));
+        json.addProperty("tick_per_minute", dropCheckTicks);
+        json.addProperty("drop_chance_per_minute", dropChance);
+        json.add("item_blacklist", GSON.toJsonTree(itemBlacklist));
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             GSON.toJson(json, writer);
         } catch (IOException e) {
