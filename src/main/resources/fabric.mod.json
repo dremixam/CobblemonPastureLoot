@@ -7,7 +7,7 @@
   "authors": ["DrEmixam"],
   "contact": {},
   "license": "All-Rights-Reserved",
-  "icon": "assets/pasture-loot/icon.png",
+  "icon": "assets/cobblemon_farmer.png",
   "environment": "*",
   "entrypoints": {
     "client": [

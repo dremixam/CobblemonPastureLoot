@@ -17,15 +17,18 @@ public class Config {
     private float dropChance;
     private String[] itemBlacklist;
 
+    private double dropChancePerTick;
+
     private Config() {
         this.dropCheckTicks = Defaults.DROP_CHECK_TICKS;
         this.dropChance = Defaults.DROP_CHANCE;
         this.itemBlacklist = Defaults.ITEM_BLACKLIST;
+        this.updateDropChancePerTick();
     }
 
     public static class Defaults {
         public static final int DROP_CHECK_TICKS = 1200;
-        public static final float DROP_CHANCE = 0.02f;
+        public static final float DROP_CHANCE = 0.05f;
         public static final String[] ITEM_BLACKLIST = new String[]{
                 "minecraft:porkchop",
                 "minecraft:beef",
@@ -64,6 +67,14 @@ public class Config {
         return dropChance;
     }
 
+    private void updateDropChancePerTick() {
+        dropChancePerTick = 1 - Math.pow(1 - dropChance, 1.0 / dropCheckTicks);
+    }
+
+    public double getDropChancePerTick() {
+        return dropChancePerTick;
+    }
+
     public String[] getItemBlacklist() {
         return itemBlacklist;
     }
@@ -75,6 +86,7 @@ public class Config {
             config.dropCheckTicks = json.get("tick_per_minute").getAsInt();
             config.dropChance = json.get("drop_chance_per_minute").getAsFloat();
             config.itemBlacklist = GSON.fromJson(json.get("item_blacklist"), String[].class);
+            config.updateDropChancePerTick();
         } catch (IOException e) {
             config = new Config();
             config.save();

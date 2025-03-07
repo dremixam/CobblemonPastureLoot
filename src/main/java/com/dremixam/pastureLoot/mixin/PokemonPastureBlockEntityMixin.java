@@ -48,7 +48,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
         blockEntity.getTetheredPokemon().forEach(tethering -> {
             double randomNumber = Math.random();
 
-            if (randomNumber < getConfig().getDropChance() / getConfig().getDropCheckTicks()) {
+            if (randomNumber < getConfig().getDropChancePerTick()) {
 
                 Pokemon pokemon = tethering.getPokemon();
 
