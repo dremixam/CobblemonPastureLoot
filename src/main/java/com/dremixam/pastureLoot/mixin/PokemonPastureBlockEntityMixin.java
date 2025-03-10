@@ -39,7 +39,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
         return PastureLoot.INSTANCE.getConfig();
     }
 
-    @Inject(at = @At("HEAD"), method = "TICKER$lambda$14")
+    @Inject(at = @At("HEAD"), method = "TICKER$lambda$11")
     private static void tick(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity, CallbackInfo ci) {
         if (world.isClientSide) return;
 
@@ -62,7 +62,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                     try {
                         Species species = pokemon.getSpecies();
                         DropTable dropTable = species.getDrops();
-                        List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
+                        List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount());
                         ServerLevel serverWorld = (ServerLevel) world;
 
                         // take one random element drop in drops List
