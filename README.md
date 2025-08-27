@@ -1,3 +1,7 @@
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/cobblemon-pasture-loot)](https://modrinth.com/mod/cobblemon-pasture-loot)
+![GitHub Release Date](https://img.shields.io/github/release-date/dremixam/CobblemonPastureLoot)
+[![Discord](https://discordapp.com/api/guilds/745755550180048906/widget.png?style=shield)](https://discord.dremixam.com)
+
 # CobblemonPastureLoot
  
 > Want to abandon the hunter-gatherer lifestyle and have your pastured pokémon do the work for you? This mod is for you!
