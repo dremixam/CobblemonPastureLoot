@@ -39,7 +39,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
         return PastureLoot.INSTANCE.getConfig();
     }
 
-    @Inject(at = @At("HEAD"), method = "TICKER$lambda$14")
+    @Inject(at = @At("HEAD"), method = "TICKER$lambda$0")
     private static void tick(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity, CallbackInfo ci) {
         if (world.isClientSide) return;
 
