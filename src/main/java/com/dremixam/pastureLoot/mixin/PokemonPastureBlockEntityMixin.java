@@ -87,15 +87,13 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                                     world.addFreshEntity(
                                             new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
 
-                                    LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at "
-                                            + pos);
+                                    LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
                                 }
                             }
                         }
                     } catch (Exception e) {
                         LOGGER.error("Error while dropping loot", e);
                     }
-
                 }
             }
         });
