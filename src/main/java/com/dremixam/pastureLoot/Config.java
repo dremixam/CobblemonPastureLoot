@@ -29,7 +29,7 @@ public class Config {
     public static class Defaults {
         public static final int DROP_CHECK_TICKS = 1200;
         public static final float DROP_CHANCE = 0.05f;
-        public static final String[] ITEM_BLACKLIST = new String[]{
+        public static final String[] ITEM_BLACKLIST = new String[] {
                 "minecraft:porkchop",
                 "minecraft:beef",
                 "minecraft:chicken",
@@ -104,5 +104,4 @@ public class Config {
         } catch (IOException e) {
         }
     }
-
 }
