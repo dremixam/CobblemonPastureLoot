@@ -40,8 +40,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
     }
 
     @Inject(at = @At("HEAD"), method = "TICKER$lambda$0")
-    private static void tick(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity,
-            CallbackInfo ci) {
+    private static void tick(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity, CallbackInfo ci) {
         if (world.isClientSide)
             return;
 
@@ -76,16 +75,13 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
 
                         if (drop instanceof ItemDropEntry itemDropEntry) {
 
-                            Item item = world.registryAccess().registryOrThrow(Registries.ITEM)
-                                    .get(itemDropEntry.getItem());
+                            Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
 
-                            if (!Arrays.asList(getConfig().getItemBlacklist())
-                                    .contains(itemDropEntry.getItem().toString())) {
+                            if (!Arrays.asList(getConfig().getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
                                 if (item != null) {
                                     ItemStack stack = new ItemStack(item, 1);
 
-                                    world.addFreshEntity(
-                                            new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
+                                    world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
 
                                     LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
                                 }
