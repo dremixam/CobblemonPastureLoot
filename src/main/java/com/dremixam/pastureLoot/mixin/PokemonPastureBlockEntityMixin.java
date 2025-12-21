@@ -87,11 +87,8 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                     } catch (Exception e) {
                         LOGGER.error("Error while dropping loot", e);
                     }
-
                 }
             }
         });
-
-
     }
 }
