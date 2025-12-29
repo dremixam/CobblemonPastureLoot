@@ -11,7 +11,6 @@ import com.dremixam.pastureLoot.Config;
 import com.dremixam.pastureLoot.PastureLoot;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mixin(PokemonPastureBlockEntity.class)
-public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer {
+public abstract class PokemonPastureBlockEntityMixin{
 
     @Unique
     private static final Logger LOGGER = PastureLoot.LOGGER;
