@@ -62,25 +62,35 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                     try {
                         Species species = pokemon.getSpecies();
                         DropTable dropTable = species.getDrops();
+
+                        // Roll Cobblemon's drop table to get the resulting DropEntry list for this tick (honors percentages/constraints).
                         List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
                         ServerLevel serverWorld = (ServerLevel) world;
 
-                        // take one random element drop in drops List
+                        // take one random element drop in rolled drops List
                         if (drops.isEmpty()) return;
 
                         DropEntry drop = drops.get(serverWorld.random.nextInt(drops.size()));
 
                         if (drop instanceof ItemDropEntry itemDropEntry) {
 
-                            Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
-
                             if (!Arrays.asList(getConfig().getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
-                                if (item != null) {
-                                    ItemStack stack = new ItemStack(item, 1);
+                                if (getConfig().legacyFlattenItemQuantity()) {
+                                    Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
+                                    // legacy behavior: always 1 item even if the drop has a quantity > 1
+                                    if (item != null) {
+                                        ItemStack stack = new ItemStack(item, 1);
 
-                                    world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
+                                        world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
 
-                                    LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
+                                        LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
+                                    }
+
+                                } else {
+                                    // new behaviour: delegate to cobblemon, honouring quantity range
+
+                                    drop.drop(entity, serverWorld, entity.position(), null);
+                                    LOGGER.debug("Dropped {} via Cobblemon ItemDropEntry from {} at {}", itemDropEntry.getItem(), pokemon.getSpecies().getName(), pos);
                                 }
                             }
                         }
