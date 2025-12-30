@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mixin(PokemonPastureBlockEntity.class)
-public abstract class PokemonPastureBlockEntityMixin{
+public abstract class PokemonPastureBlockEntityMixin {
 
     @Unique
     private static final Logger LOGGER = PastureLoot.LOGGER;

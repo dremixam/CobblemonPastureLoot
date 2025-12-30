@@ -82,7 +82,9 @@ public class Config {
         return itemBlacklist;
     }
 
-    public boolean legacyFlattenItemQuantity() { return legacyFlattenItemQuantity; }
+    public boolean legacyFlattenItemQuantity() {
+        return legacyFlattenItemQuantity;
+    }
 
     public static Config load() {
         Config config = new Config();

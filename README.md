@@ -4,7 +4,7 @@
 [![Twitch Status](https://img.shields.io/twitch/status/dremixam)](https://twitch.tv/dremixam)
 
 # CobblemonPastureLoot
- 
+
 > Want to abandon the hunter-gatherer lifestyle and have your pastured pokémon do the work for you? This mod is for you!
 
 Cobblemon mod to make pastured pokémon randomly drop items from their loot table.
@@ -19,7 +19,8 @@ Edit the `config/PastureLoot.json` file to change the settings.
 - `tick_per_minute`: The number of ticks per minute. Should stay at 1200.
 - `drop_chance_per_minute`: The chance for each pokémon dropping an item each minute.
 - `item_blacklist`: A list of items that should not be dropped by the pokémons.
-- `legacy_flatten_item_quantity`: False for using Cobblemon loot table logic, false to have all items on the loot table have the same drop chances (legacy behavior).
+- `legacy_flatten_item_quantity`: False for using Cobblemon loot table logic, false to have all items on the loot table
+  have the same drop chances (legacy behavior).
 
 ```json
 {
