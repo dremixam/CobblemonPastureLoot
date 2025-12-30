@@ -79,8 +79,8 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
 
                             if (!Arrays.asList(getConfig().getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
                                 if (getConfig().legacyFlattenItemQuantity()) {
-                                    Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
                                     // legacy behaviour: always 1 item even if the drop has a quantity > 1
+                                    Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
                                     if (item != null) {
                                         ItemStack stack = new ItemStack(item, 1);
 
