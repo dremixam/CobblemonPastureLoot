@@ -31,34 +31,7 @@ public class Config {
     public static class Defaults {
         public static final int DROP_CHECK_TICKS = 1200;
         public static final float DROP_CHANCE = 0.05f;
-        public static final String[] ITEM_BLACKLIST = new String[]{
-                "minecraft:porkchop",
-                "minecraft:beef",
-                "minecraft:chicken",
-                "minecraft:mutton",
-                "minecraft:rabbit",
-                "minecraft:fish",
-                "minecraft:cooked_porkchop",
-                "minecraft:cooked_beef",
-                "minecraft:cooked_chicken",
-                "minecraft:cooked_mutton",
-                "minecraft:cooked_rabbit",
-                "minecraft:cooked_fish",
-                "minecraft:leather",
-                "minecraft:bone",
-                "minecraft:spider_eye",
-                "minecraft:rotten_flesh",
-                "minecraft:rabbit_hide",
-                "minecraft:rabbit_foot",
-                "minecraft:cod",
-                "minecraft:pufferfish",
-                "minecraft:bone_block",
-                "minecraft:bone_meal",
-                "cobblemon:sharp_beak",
-                "minecraft:honey_bottle",
-                "minecraft:salmon",
-                "minecraft:white_wool"
-        };
+        public static final String[] ITEM_BLACKLIST = new String[]{"minecraft:porkchop", "minecraft:beef", "minecraft:chicken", "minecraft:mutton", "minecraft:rabbit", "minecraft:fish", "minecraft:cooked_porkchop", "minecraft:cooked_beef", "minecraft:cooked_chicken", "minecraft:cooked_mutton", "minecraft:cooked_rabbit", "minecraft:cooked_fish", "minecraft:leather", "minecraft:bone", "minecraft:spider_eye", "minecraft:rotten_flesh", "minecraft:rabbit_hide", "minecraft:rabbit_foot", "minecraft:cod", "minecraft:pufferfish", "minecraft:bone_block", "minecraft:bone_meal", "cobblemon:sharp_beak", "minecraft:honey_bottle", "minecraft:salmon", "minecraft:white_wool"};
         public static final boolean LEGACY_FLATTEN_ITEM_QUANTITY = false;
     }
 
@@ -87,7 +60,9 @@ public class Config {
     }
 
     public static Config load() {
-        Config config = new Config();
+        Config config = new Config(); // Set defaults
+        boolean needsSave = false;
+
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
             config.dropCheckTicks = json.get("tick_per_minute").getAsInt();
@@ -95,12 +70,20 @@ public class Config {
             config.itemBlacklist = GSON.fromJson(json.get("item_blacklist"), String[].class);
             if (json.has("legacy_flatten_item_quantity")) {
                 config.legacyFlattenItemQuantity = json.get("legacy_flatten_item_quantity").getAsBoolean();
+            } else {
+                needsSave = true; // this key was missing; let's write it
             }
             config.updateDropChancePerTick();
         } catch (IOException e) {
             config = new Config();
             config.save();
         }
+
+        // Persist newly-added keys into the existing config file
+        if (needsSave) {
+            config.save();
+        }
+
         return config;
     }
 
