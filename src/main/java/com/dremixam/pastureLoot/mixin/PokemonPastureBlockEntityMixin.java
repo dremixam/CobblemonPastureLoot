@@ -6,7 +6,7 @@ import com.cobblemon.mod.common.api.drop.ItemDropEntry;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.cobblemon.mod.common.pokemon.Species;
+import com.cobblemon.mod.common.pokemon.FormData;
 import com.dremixam.pastureLoot.Config;
 import com.dremixam.pastureLoot.PastureLoot;
 import net.minecraft.core.registries.Registries;
@@ -59,27 +59,40 @@ public abstract class PokemonPastureBlockEntityMixin{
                     if (entity == null) return;
 
                     try {
-                        Species species = pokemon.getSpecies();
-                        DropTable dropTable = species.getDrops();
+                        // Different forms can have different drop tables
+                        // Example: Gimmighoul normally drops 24-48 cobblemoin:relic_coin, roaming form drops 1 cobblemoin:relic_coin
+                        // Another example: Voltorb [Hisuian] drops Red Apricorn 0-1, Voltorb doesn't
+                        FormData form = pokemon.getForm();
+                        DropTable dropTable = form.getDrops();
+
+                        // Roll Cobblemon's drop table to get the resulting DropEntry list for this tick (honours percentages/constraints).
                         List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
                         ServerLevel serverWorld = (ServerLevel) world;
 
-                        // take one random element drop in drops List
+                        // take one random element drop in rolled drops List
                         if (drops.isEmpty()) return;
 
                         DropEntry drop = drops.get(serverWorld.random.nextInt(drops.size()));
 
                         if (drop instanceof ItemDropEntry itemDropEntry) {
 
-                            Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
-
                             if (!Arrays.asList(getConfig().getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
-                                if (item != null) {
-                                    ItemStack stack = new ItemStack(item, 1);
+                                if (getConfig().legacyFlattenItemQuantity()) {
+                                    // legacy behaviour: always 1 item even if the drop has a quantity > 1
+                                    Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
+                                    if (item != null) {
+                                        ItemStack stack = new ItemStack(item, 1);
 
-                                    world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
+                                        world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
 
-                                    LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
+                                        LOGGER.debug("Dropped " + stack + " from " + pokemon.getSpecies().getName() + " at " + pos);
+                                    }
+
+                                } else {
+                                    // new behaviour: delegate to cobblemon, honouring quantity range
+
+                                    itemDropEntry.drop(entity, serverWorld, entity.position(), null);
+                                    LOGGER.debug("Dropping {} from {} with quantityRange={} at {}", itemDropEntry.getItem(), pokemon.getSpecies().getName(), itemDropEntry.getQuantityRange(), pos);
                                 }
                             }
                         }

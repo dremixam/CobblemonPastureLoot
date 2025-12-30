@@ -16,6 +16,7 @@ public class Config {
     private int dropCheckTicks;
     private float dropChance;
     private String[] itemBlacklist;
+    private boolean legacyFlattenItemQuantity;
 
     private double dropChancePerTick;
 
@@ -23,6 +24,7 @@ public class Config {
         this.dropCheckTicks = Defaults.DROP_CHECK_TICKS;
         this.dropChance = Defaults.DROP_CHANCE;
         this.itemBlacklist = Defaults.ITEM_BLACKLIST;
+        this.legacyFlattenItemQuantity = true;
         this.updateDropChancePerTick();
     }
 
@@ -79,6 +81,8 @@ public class Config {
         return itemBlacklist;
     }
 
+    public boolean legacyFlattenItemQuantity() { return legacyFlattenItemQuantity; }
+
     public static Config load() {
         Config config = new Config();
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
@@ -86,6 +90,9 @@ public class Config {
             config.dropCheckTicks = json.get("tick_per_minute").getAsInt();
             config.dropChance = json.get("drop_chance_per_minute").getAsFloat();
             config.itemBlacklist = GSON.fromJson(json.get("item_blacklist"), String[].class);
+            if (json.has("legacy_flatten_item_quantity")) {
+                config.legacyFlattenItemQuantity = json.get("legacy_flatten_item_quantity").getAsBoolean();
+            }
             config.updateDropChancePerTick();
         } catch (IOException e) {
             config = new Config();
@@ -99,6 +106,7 @@ public class Config {
         json.addProperty("tick_per_minute", dropCheckTicks);
         json.addProperty("drop_chance_per_minute", dropChance);
         json.add("item_blacklist", GSON.toJsonTree(itemBlacklist));
+        json.addProperty("legacy_flatten_item_quantity", legacyFlattenItemQuantity);
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             GSON.toJson(json, writer);
         } catch (IOException e) {
