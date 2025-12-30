@@ -6,7 +6,7 @@ import com.cobblemon.mod.common.api.drop.ItemDropEntry;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.cobblemon.mod.common.pokemon.Species;
+import com.cobblemon.mod.common.pokemon.FormData;
 import com.dremixam.pastureLoot.Config;
 import com.dremixam.pastureLoot.PastureLoot;
 import net.minecraft.core.registries.Registries;
@@ -60,8 +60,11 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                     if (entity == null) return;
 
                     try {
-                        Species species = pokemon.getSpecies();
-                        DropTable dropTable = species.getDrops();
+                        // Different forms can have different drop tables
+                        // Example: Gimmighoul normally drops 24-48 cobblemoin:relic_coin, roaming form drops 1 cobblemoin:relic_coin
+                        // Another example: Voltorb [Hisuian] drops Red Apricorn 0-1, Voltorb doesn't
+                        FormData form = pokemon.getForm();
+                        DropTable dropTable = form.getDrops();
 
                         // Roll Cobblemon's drop table to get the resulting DropEntry list for this tick (honors percentages/constraints).
                         List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
