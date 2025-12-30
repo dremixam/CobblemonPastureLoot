@@ -10,7 +10,7 @@
 Cobblemon mod to make pastured pokémon randomly drop items from their loot table.
 The items are dropped at the pokémon's location.
 
-Currently only available for Cobblemon 1.6.1 on Fabric for Minecraft 1.21.1
+Currently available for Cobblemon 1.7.1 on Fabric for Minecraft 1.21.1
 
 ## Settings
 
@@ -19,6 +19,7 @@ Edit the `config/PastureLoot.json` file to change the settings.
 - `tick_per_minute`: The number of ticks per minute. Should stay at 1200.
 - `drop_chance_per_minute`: The chance for each pokémon dropping an item each minute.
 - `item_blacklist`: A list of items that should not be dropped by the pokémons.
+- `legacy_flatten_item_quantity`: False for using Cobblemon loot table logic, false to have all items on the loot table have the same drop chances (legacy behavior).
 
 ```json
 {
@@ -51,7 +52,8 @@ Edit the `config/PastureLoot.json` file to change the settings.
     "minecraft:honey_bottle",
     "minecraft:salmon",
     "minecraft:white_wool"
-  ]
+  ],
+  "legacy_flatten_item_quantity": false
 }
 
 ```
