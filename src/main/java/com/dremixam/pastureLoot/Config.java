@@ -87,7 +87,9 @@ public class Config {
     }
 
     public static Config load() {
-        Config config = new Config();
+        Config config = new Config(); // Set defaults
+        boolean needsSave = false;
+
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
             config.dropCheckTicks = json.get("tick_per_minute").getAsInt();
@@ -95,12 +97,20 @@ public class Config {
             config.itemBlacklist = GSON.fromJson(json.get("item_blacklist"), String[].class);
             if (json.has("legacy_flatten_item_quantity")) {
                 config.legacyFlattenItemQuantity = json.get("legacy_flatten_item_quantity").getAsBoolean();
+            } else {
+                needsSave = true; // this key was missing; let's write it
             }
             config.updateDropChancePerTick();
         } catch (IOException e) {
             config = new Config();
             config.save();
         }
+
+        // Persist newly-added keys into the existing config file
+        if (needsSave) {
+            config.save();
+        }
+
         return config;
     }
 
