@@ -24,7 +24,7 @@ public class Config {
         this.dropCheckTicks = Defaults.DROP_CHECK_TICKS;
         this.dropChance = Defaults.DROP_CHANCE;
         this.itemBlacklist = Defaults.ITEM_BLACKLIST;
-        this.legacyFlattenItemQuantity = true;
+        this.legacyFlattenItemQuantity = Defaults.LEGACY_FLATTEN_ITEM_QUANTITY;
         this.updateDropChancePerTick();
     }
 
@@ -59,6 +59,7 @@ public class Config {
                 "minecraft:salmon",
                 "minecraft:white_wool"
         };
+        public static final boolean LEGACY_FLATTEN_ITEM_QUANTITY = false;
     }
 
     public int getDropCheckTicks() {
