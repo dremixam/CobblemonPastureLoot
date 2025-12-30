@@ -89,8 +89,8 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                                 } else {
                                     // new behaviour: delegate to cobblemon, honouring quantity range
 
-                                    drop.drop(entity, serverWorld, entity.position(), null);
-                                    LOGGER.debug("Dropped {} via Cobblemon ItemDropEntry from {} at {}", itemDropEntry.getItem(), pokemon.getSpecies().getName(), pos);
+                                    itemDropEntry.drop(entity, serverWorld, entity.position(), null);
+                                    LOGGER.debug("Dropping {} from {} with quantityRange={} at {}", itemDropEntry.getItem(), pokemon.getSpecies().getName(), itemDropEntry.getQuantityRange(), pos);
                                 }
                             }
                         }
