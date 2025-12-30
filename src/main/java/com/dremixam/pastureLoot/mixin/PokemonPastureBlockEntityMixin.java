@@ -66,7 +66,7 @@ public abstract class PokemonPastureBlockEntityMixin implements WorldlyContainer
                         FormData form = pokemon.getForm();
                         DropTable dropTable = form.getDrops();
 
-                        // Roll Cobblemon's drop table to get the resulting DropEntry list for this tick (honors percentages/constraints).
+                        // Roll Cobblemon's drop table to get the resulting DropEntry list for this tick (honours percentages/constraints).
                         List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
                         ServerLevel serverWorld = (ServerLevel) world;
 
