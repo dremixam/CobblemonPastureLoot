@@ -62,7 +62,9 @@ public abstract class PokemonPastureBlockEntityMixin {
                         // Different forms can have different drop tables
                         // Example: Gimmighoul normally drops 24-48 cobblemoin:relic_coin, roaming form drops 1 cobblemoin:relic_coin
                         // Another example: Voltorb [Hisuian] drops Red Apricorn 0-1, Voltorb doesn't
-                        FormData form = pokemon.getForm();
+                        // Use getSpecies().getForm(getAspects()) to dynamically resolve the correct form from
+                        // the Pokémon's current aspects (e.g. "hisuian"), avoiding any stale cached form value.
+                        FormData form = pokemon.getSpecies().getForm(pokemon.getAspects());
                         DropTable dropTable = form.getDrops();
 
                         // Roll Cobblemon's drop table to get the resulting DropEntry list for this tick (honours percentages/constraints).
