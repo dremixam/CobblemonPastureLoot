@@ -1,4 +1,4 @@
-package com.dremixam.pastureLoot.mixin;
+package com.dremixam.pastureloot.minecraft.mixin;
 
 import com.cobblemon.mod.common.api.drop.DropEntry;
 import com.cobblemon.mod.common.api.drop.DropTable;
@@ -7,8 +7,8 @@ import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.FormData;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.dremixam.pastureLoot.Config;
-import com.dremixam.pastureLoot.PastureLoot;
+import com.dremixam.pastureloot.Config;
+import com.dremixam.pastureloot.PastureLoot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -31,7 +31,7 @@ public abstract class PokemonPastureBlockEntityMixin {
 
     @Unique
     private static Config getConfig() {
-        return PastureLoot.INSTANCE.getConfig();
+        return PastureLoot.config();
     }
 
     @Unique
