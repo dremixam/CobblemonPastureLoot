@@ -10,6 +10,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,15 @@ public final class CobblemonBridge {
     /** How far from the pasture block its pokémon may wander, from the Cobblemon config. */
     public static int pastureWanderDistance() {
         return Cobblemon.INSTANCE.getConfig().getPastureMaxWanderDistance();
+    }
+
+    /** Whether the pokémon matches a Cobblemon property string, as written in /pokegive. */
+    public static boolean matches(PasturedPokemon pasturedPokemon, String properties) {
+        return PropertiesMatcher.matches(pasturedPokemon.pokemon(), properties);
+    }
+
+    public static Vec3 position(PasturedPokemon pasturedPokemon) {
+        return pasturedPokemon.entity().position();
     }
 
     public static int friendship(PasturedPokemon pasturedPokemon) {
