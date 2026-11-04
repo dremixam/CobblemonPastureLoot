@@ -31,17 +31,21 @@ public final class PastureTicker {
             double chance = DropRate.chancePerTick(dropsPerHour(pasturedPokemon, settings, matcher));
             if (serverLevel.random.nextDouble() < chance && roomForItems(serverLevel, pos, settings)) {
                 PastureDrops.dropFor(pasturedPokemon, serverLevel, pos,
-                        matcher.matching(pasturedPokemon, PastureLoot.overrides()));
+                        matcher.matching(pasturedPokemon.ref(), PastureLoot.overrides()));
             }
         });
     }
 
     private static double dropsPerHour(PasturedPokemon pasturedPokemon, Settings settings, OverrideMatcher matcher) {
-        double friendship = FriendshipBonus.multiplier(
-                CobblemonBridge.friendship(pasturedPokemon), settings.friendshipMaxBonus());
         double overrides = OverridePlan.rateMultiplier(
-                matcher.matching(pasturedPokemon, PastureLoot.rateOverrides()));
-        return settings.dropsPerHour() * friendship * overrides;
+                matcher.matching(pasturedPokemon.ref(), PastureLoot.rateOverrides()));
+        return dropsPerHour(CobblemonBridge.friendship(pasturedPokemon), overrides, settings);
+    }
+
+    /** Drops per hour of one pokémon, before the cap of DropRate. */
+    static double dropsPerHour(int friendship, double overrideMultiplier, Settings settings) {
+        double friendshipMultiplier = FriendshipBonus.multiplier(friendship, settings.friendshipMaxBonus());
+        return settings.dropsPerHour() * friendshipMultiplier * overrideMultiplier;
     }
 
     private static boolean roomForItems(ServerLevel level, BlockPos pos, Settings settings) {

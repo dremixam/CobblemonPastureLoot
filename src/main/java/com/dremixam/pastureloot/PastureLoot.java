@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Consumer;
 
 /** Common entry point, called by the entry point of each loader. */
 public final class PastureLoot {
@@ -19,6 +20,7 @@ public final class PastureLoot {
     public static final String MOD_ID = "pastureloot";
     public static final Logger LOGGER = LoggerFactory.getLogger("PastureLoot");
 
+    private static Path configDirectory;
     private static Settings settings = Settings.DEFAULTS;
     private static ItemFilter itemFilter = Settings.DEFAULTS.itemFilter();
     private static List<OverrideRule> overrides = List.of();
@@ -28,35 +30,45 @@ public final class PastureLoot {
     }
 
     /** Loads the settings and the overrides from the config directory of the loader, migrating the 1.0.x file first. */
-    public static void init(Path configDirectory) {
-        loadSettings(configDirectory);
-        loadOverrides(configDirectory);
+    public static void init(Path directory) {
+        configDirectory = directory;
+        reload(warning -> { });
     }
 
-    private static void loadSettings(Path configDirectory) {
+    /** Reads both files again. Every warning goes to the log and to the given consumer. */
+    public static void reload(Consumer<String> warnings) {
+        Consumer<String> allWarnings = warning -> {
+            LOGGER.warn(warning);
+            warnings.accept(warning);
+        };
+        loadSettings(allWarnings);
+        loadOverrides(allWarnings);
+    }
+
+    private static void loadSettings(Consumer<String> warnings) {
         try {
-            if (LegacyJsonMigration.migrate(configDirectory, LOGGER::warn)) {
+            if (LegacyJsonMigration.migrate(configDirectory, warnings)) {
                 LOGGER.info("{} was migrated to {}", LegacyJsonMigration.LEGACY_FILE_NAME, SettingsFile.FILE_NAME);
             }
-            settings = SettingsFile.load(configDirectory.resolve(SettingsFile.FILE_NAME), LOGGER::warn);
+            settings = SettingsFile.load(configDirectory.resolve(SettingsFile.FILE_NAME), warnings);
         } catch (IOException exception) {
-            LOGGER.error("Cannot load {}, default settings are used", SettingsFile.FILE_NAME, exception);
+            LOGGER.error("Cannot load {}", SettingsFile.FILE_NAME, exception);
+            warnings.accept("Cannot load " + SettingsFile.FILE_NAME + ", default settings are used: " + exception.getMessage());
             settings = Settings.DEFAULTS;
         }
         itemFilter = settings.itemFilter();
     }
 
-    private static void loadOverrides(Path configDirectory) {
+    private static void loadOverrides(Consumer<String> warnings) {
         try {
-            overrides = OverridesFile.load(configDirectory.resolve(OverridesFile.FILE_NAME), LOGGER::warn);
+            overrides = OverridesFile.load(configDirectory.resolve(OverridesFile.FILE_NAME), warnings);
         } catch (IOException exception) {
-            LOGGER.error("Cannot load {}, no override is used", OverridesFile.FILE_NAME, exception);
+            LOGGER.error("Cannot load {}", OverridesFile.FILE_NAME, exception);
+            warnings.accept("Cannot load " + OverridesFile.FILE_NAME + ", no override is used: " + exception.getMessage());
             overrides = List.of();
         }
         rateOverrides = overrides.stream().filter(OverrideRule::changesRate).toList();
-        if (!overrides.isEmpty()) {
-            LOGGER.info("{} override rules loaded", overrides.size());
-        }
+        LOGGER.info("{} override rules loaded", overrides.size());
     }
 
     public static Settings settings() {

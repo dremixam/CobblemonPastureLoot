@@ -1,7 +1,7 @@
 package com.dremixam.pastureloot.minecraft;
 
 import com.dremixam.pastureloot.minecraft.cobblemon.CobblemonBridge;
-import com.dremixam.pastureloot.minecraft.cobblemon.CobblemonBridge.PasturedPokemon;
+import com.dremixam.pastureloot.minecraft.cobblemon.CobblemonBridge.PokemonRef;
 import com.dremixam.pastureloot.override.OverrideRule;
 import com.dremixam.pastureloot.override.Place;
 import net.minecraft.core.BlockPos;
@@ -25,17 +25,17 @@ final class OverrideMatcher {
     }
 
     /** The rules that match, in file order. */
-    List<OverrideRule> matching(PasturedPokemon pasturedPokemon, List<OverrideRule> rules) {
+    List<OverrideRule> matching(PokemonRef pokemon, List<OverrideRule> rules) {
         if (rules.isEmpty()) {
             return List.of();
         }
         return rules.stream()
-                .filter(rule -> CobblemonBridge.matches(pasturedPokemon, rule.pokemon()))
+                .filter(rule -> CobblemonBridge.matches(pokemon, rule.pokemon()))
                 .filter(rule -> !rule.hasPlace() || rule.placeMatches(place()))
                 .toList();
     }
 
-    private Place place() {
+    Place place() {
         if (place == null) {
             Holder<Biome> biome = level.getBiome(pasturePos);
             String biomeId = biome.unwrapKey().map(key -> key.location().toString()).orElse("");
