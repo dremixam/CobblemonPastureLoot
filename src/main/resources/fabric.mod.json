@@ -1,28 +1,24 @@
 {
   "schemaVersion": 1,
-  "id": "pasture-loot",
+  "id": "${mod_id}",
   "version": "${version}",
   "name": "PastureLoot",
-  "description": "",
+  "description": "Pastured pokémon randomly drop items from their loot table.",
   "authors": ["DrEmixam"],
-  "contact": {},
+  "contact": {
+    "homepage": "https://modrinth.com/mod/cobblemon-pasture-loot",
+    "sources": "https://github.com/dremixam/CobblemonPastureLoot"
+  },
   "license": "All-Rights-Reserved",
-  "icon": "assets/cobblemon_farmer.png",
+  "icon": "assets/pastureloot/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "com.dremixam.pastureLoot.client.PastureLootClient"
-    ],
     "main": [
-      "com.dremixam.pastureLoot.PastureLoot"
+      "com.dremixam.pastureloot.platforms.fabric.PastureLootFabric"
     ]
   },
   "mixins": [
-    "pasture-loot.mixins.json",
-    {
-      "config": "pasture-loot.client.mixins.json",
-      "environment": "client"
-    }
+    "pastureloot.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
