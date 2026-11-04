@@ -4,26 +4,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.dremixam.pastureloot.loot.ItemFilter;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Config {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String CONFIG_FILE = "config/PastureLoot.json";
+    private static final int MINUTES_PER_HOUR = 60;
 
     private int dropCheckTicks;
     private float dropChance;
     private String[] itemBlacklist;
-
-    private double dropChancePerTick;
+    private ItemFilter itemFilter;
 
     private Config() {
         this.dropCheckTicks = Defaults.DROP_CHECK_TICKS;
         this.dropChance = Defaults.DROP_CHANCE;
         this.itemBlacklist = Defaults.ITEM_BLACKLIST;
-        this.updateDropChancePerTick();
     }
 
     public static class Defaults {
@@ -59,24 +60,16 @@ public class Config {
         };
     }
 
-    public int getDropCheckTicks() {
-        return dropCheckTicks;
+    /** Average drops per hour and per pokémon, read from the per minute chance of the 1.0.x file. */
+    public double dropsPerHour() {
+        return dropChance * MINUTES_PER_HOUR * Defaults.DROP_CHECK_TICKS / dropCheckTicks;
     }
 
-    public float getDropChance() {
-        return dropChance;
-    }
-
-    private void updateDropChancePerTick() {
-        dropChancePerTick = 1 - Math.pow(1 - dropChance, 1.0 / dropCheckTicks);
-    }
-
-    public double getDropChancePerTick() {
-        return dropChancePerTick;
-    }
-
-    public String[] getItemBlacklist() {
-        return itemBlacklist;
+    public ItemFilter itemFilter() {
+        if (itemFilter == null) {
+            itemFilter = new ItemFilter(Arrays.asList(itemBlacklist));
+        }
+        return itemFilter;
     }
 
     public static Config load() {
@@ -93,8 +86,6 @@ public class Config {
             if (json.has("legacy_flatten_item_quantity") || json.has("enable_multiple_drops_per_tick")) {
                 needsSave = true;
             }
-
-            config.updateDropChancePerTick();
         } catch (IOException e) {
             config = new Config();
             config.save();

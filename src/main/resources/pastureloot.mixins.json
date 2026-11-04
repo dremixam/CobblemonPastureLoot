@@ -4,7 +4,7 @@
   "package": "com.dremixam.pastureloot.minecraft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "PokemonPastureBlockEntityMixin"
+    "PastureBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
