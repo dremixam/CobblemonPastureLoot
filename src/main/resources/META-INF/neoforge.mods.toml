@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "${neo_loader_version_range}"
-license = "All-Rights-Reserved"
+license = "AGPL-3.0-or-later"
 
 [[mods]]
 modId = "${mod_id}"

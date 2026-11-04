@@ -9,7 +9,7 @@
     "homepage": "https://modrinth.com/mod/cobblemon-pasture-loot",
     "sources": "https://github.com/dremixam/CobblemonPastureLoot"
   },
-  "license": "All-Rights-Reserved",
+  "license": "AGPL-3.0-or-later",
   "icon": "assets/pastureloot/icon.png",
   "environment": "*",
   "entrypoints": {
