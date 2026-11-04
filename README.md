@@ -104,6 +104,8 @@ Since version 2.0.0 the mod is under [DrEmixam's Lab License](LICENSE.md). Versi
 
 In short: you can play with the mod, modify it, use it on any server and put it in modpacks. Publishing the mod or a modified version on a mod platform requires my written permission. Forks are welcome on GitHub or on your own website.
 
+The mod and anything made from it can never be published as a project on CurseForge or any other Overwolf service. A CurseForge modpack can still include the unmodified jar inside the pack, with a link to the Modrinth page of the mod in its description. I boycott Overwolf for its support of the IDF and the genocide in Palestine.
+
 ---
 
 ## My other mods
