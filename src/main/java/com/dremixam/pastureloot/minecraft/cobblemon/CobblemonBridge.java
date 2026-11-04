@@ -71,8 +71,8 @@ public final class CobblemonBridge {
     }
 
     /** Whether the pokémon matches a Cobblemon property string, as written in /pokegive. */
-    public static boolean matches(PasturedPokemon pasturedPokemon, String properties) {
-        return PropertiesMatcher.matches(pasturedPokemon.pokemon(), properties);
+    public static boolean matches(PokemonRef pokemon, String properties) {
+        return PropertiesMatcher.matches(pokemon.pokemon(), properties);
     }
 
     public static Vec3 position(PasturedPokemon pasturedPokemon) {
@@ -89,6 +89,14 @@ public final class CobblemonBridge {
 
     /** A pokémon tethered to a pasture, with its loaded entity. */
     public record PasturedPokemon(Pokemon pokemon, PokemonEntity entity) {
+
+        public PokemonRef ref() {
+            return new PokemonRef(pokemon);
+        }
+    }
+
+    /** A pokémon, with or without an entity in the world. */
+    public record PokemonRef(Pokemon pokemon) {
     }
 
     /** One item entry rolled from a drop table. */
