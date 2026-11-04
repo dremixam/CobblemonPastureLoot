@@ -1,5 +1,6 @@
 package com.dremixam.pastureloot.minecraft.cobblemon;
 
+import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.drop.DropEntry;
 import com.cobblemon.mod.common.api.drop.DropTable;
 import com.cobblemon.mod.common.api.drop.ItemDropEntry;
@@ -61,6 +62,15 @@ public final class CobblemonBridge {
     public static void drop(RolledDrop drop, PasturedPokemon pasturedPokemon, ServerLevel level) {
         PokemonEntity entity = pasturedPokemon.entity();
         drop.entry().drop(entity, level, entity.position(), null);
+    }
+
+    /** How far from the pasture block its pokémon may wander, from the Cobblemon config. */
+    public static int pastureWanderDistance() {
+        return Cobblemon.INSTANCE.getConfig().getPastureMaxWanderDistance();
+    }
+
+    public static int friendship(PasturedPokemon pasturedPokemon) {
+        return pasturedPokemon.pokemon().getFriendship();
     }
 
     public static String speciesName(PasturedPokemon pasturedPokemon) {

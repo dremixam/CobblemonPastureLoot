@@ -90,6 +90,12 @@ dependencies {
         "modImplementation"("net.fabricmc:fabric-loader:${project.property("loader_version")}")
         "modImplementation"("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
         "modImplementation"("com.cobblemon:fabric:${project.property("cobblemon_version")}")
+        // NeoForge ships NightConfig itself, Fabric does not: it goes inside the jar.
+        for (module in listOf("core", "toml")) {
+            val nightConfig = "com.electronwill.night-config:$module:${rootProject.property("night_config_version")}"
+            "implementation"(nightConfig)
+            "include"(nightConfig)
+        }
     } else {
         "neoForge"("net.neoforged:neoforge:${project.property("neoforge_version")}")
         "modImplementation"("com.cobblemon:neoforge:${project.property("cobblemon_version")}") {
