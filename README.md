@@ -102,6 +102,8 @@ If you encounter any issue, open a [new issue on GitHub](https://github.com/drem
 
 The mod is under the [GNU Affero General Public License v3.0](LICENSE.md).
 
+Please do not repost the mod on CurseForge.
+
 ---
 
 ## My other mods
