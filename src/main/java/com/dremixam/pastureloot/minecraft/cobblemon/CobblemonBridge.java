@@ -5,8 +5,8 @@ import com.cobblemon.mod.common.api.drop.DropTable;
 import com.cobblemon.mod.common.api.drop.ItemDropEntry;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import com.cobblemon.mod.common.pokemon.FormData;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-/** The only class that calls the Cobblemon API. */
+/** Entry point of the package that calls the Cobblemon API. */
 public final class CobblemonBridge {
 
     private CobblemonBridge() {
@@ -37,11 +37,17 @@ public final class CobblemonBridge {
         }
     }
 
-    /** Rolls the drop table of the current form of the pokémon and keeps the item entries. */
-    public static List<RolledDrop> rollDrops(PasturedPokemon pasturedPokemon) {
+    /**
+     * Rolls the drop table of the pokémon and keeps the item entries. The table of a spawn at the
+     * place of the pasture wins over the table of the current form, as it would for a wild pokémon.
+     */
+    public static List<RolledDrop> rollDrops(PasturedPokemon pasturedPokemon, ServerLevel level, BlockPos pasturePos) {
         Pokemon pokemon = pasturedPokemon.pokemon();
-        FormData form = pokemon.getSpecies().getForm(pokemon.getAspects());
-        DropTable dropTable = form.getDrops();
+        DropTable dropTable = SpawnDrops.at(pokemon, level, pasturePos);
+        if (dropTable == null) {
+            // Not species.getForm(aspects): it misses forms that need several aspects (Galarian Darmanitan).
+            dropTable = pokemon.getForm().getDrops();
+        }
         List<RolledDrop> rolled = new ArrayList<>();
         for (DropEntry entry : dropTable.getDrops(dropTable.getAmount(), pokemon)) {
             if (entry instanceof ItemDropEntry itemEntry) {

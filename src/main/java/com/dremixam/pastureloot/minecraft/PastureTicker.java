@@ -33,7 +33,7 @@ public final class PastureTicker {
 
     private static void dropFor(PasturedPokemon pasturedPokemon, ServerLevel level, ItemFilter filter, BlockPos pos) {
         try {
-            for (RolledDrop drop : CobblemonBridge.rollDrops(pasturedPokemon)) {
+            for (RolledDrop drop : CobblemonBridge.rollDrops(pasturedPokemon, level, pos)) {
                 if (filter.allows(drop.itemId())) {
                     CobblemonBridge.drop(drop, pasturedPokemon, level);
                     PastureLoot.LOGGER.debug("Dropped {} from {} at {}",
